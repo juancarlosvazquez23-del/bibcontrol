@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Navideña para Papá y Mamá 🎄</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Nieve cayendo */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 1em;
+            animation: fall linear infinite;
+            opacity: 0.8;
+            z-index: 0;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Sobre de la carta */
+        .envelope-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: #f4e4c1;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .envelope:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #d4b896;
+            transform-origin: top center;
+            z-index: 3;
+            transition: transform 0.6s ease;
+        }
+
+        .envelope.opening .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-body {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: #f4e4c1;
+            border-radius: 0 0 10px 10px;
+            overflow: hidden;
+        }
+
+        .letter-paper {
+            position: absolute;
+            bottom: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            height: 350px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transition: bottom 0.8s ease;
+            z-index: 2;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .envelope.opening .letter-paper {
+            bottom: 50px;
+        }
+
+        .letter-preview {
+            text-align: center;
+            color: #c94b4b;
+            font-size: 0.9em;
+        }
+
+        .letter-preview h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .stamp {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #c94b4b;
+            border: 3px solid white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .click-instruction {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+            animation: pulse 2s infinite;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Contenedor de la carta completa */
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            pointer-events: none;
+            max-height: 90vh;
+        }
+
+        .container.show {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+        }
+
+        /* Scrollbar personalizada */
+        .container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #c94b4b 0%, #4b134f 100%);
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #a93939 0%, #3a0f3d 100%);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c94b4b 0%, #4b134f 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header .decoration {
+            font-size: 3em;
+            margin: 10px 0;
+        }
+
+        .content {
+            padding: 40px 30px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .greeting {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #c94b4b;
+            font-weight: bold;
+        }
+
+        .message {
+            font-size: 1.1em;
+            text-align: justify;
+            margin-bottom: 25px;
+        }
+
+        .argument-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 5px solid #c94b4b;
+        }
+
+        .argument-box h2 {
+            color: #4b134f;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .argument-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .argument-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .argument-list li:before {
+            content: "🎁";
+            position: absolute;
+            left: 0;
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 30px;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #c94b4b 0%, #4b134f 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            animation: modalAppear 0.5s ease;
+        }
+
+        @keyframes modalAppear {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h2 {
+            color: #c94b4b;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .modal-content p {
+            font-size: 1.2em;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .close-btn {
+            background: #4b134f;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 1em;
+        }
+
+        .hearts {
+            text-align: center;
+            font-size: 2em;
+            margin: 20px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .envelope {
+                width: 250px;
+                height: 170px;
+            }
+
+            .envelope-flap {
+                border-left: 125px solid transparent;
+                border-right: 125px solid transparent;
+                border-top: 85px solid #d4b896;
+            }
+
+            .letter-paper {
+                width: 220px;
+                height: 300px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sobre con animación de apertura -->
+    <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope" id="envelope">
+            <div class="stamp">🎄</div>
+            <div class="envelope-flap"></div>
+            <div class="envelope-body"></div>
+            <div class="letter-paper">
+                <div class="letter-preview">
+                    <h3>🎅 Carta Navideña</h3>
+                    <p>Para: Adri</p>
+                    <p>De: Tu niño ❤️</p>
+                    <p style="margin-top: 20px; font-size: 0.85em;">✨ Haz clic para abrir ✨</p>
+                </div>
+            </div>
+        </div>
+        <div class="click-instruction">👆 Haz clic para abrir la carta</div>
+    </div>
+
+    <!-- Contenedor de la carta completa -->
+    <div class="container" id="letterContainer">
+        <div class="header">
+            <div class="decoration">🎄✨🎅</div>
+            <h1>Carta para mi bb</h1>
+            <div class="decoration">🎁⭐🔔</div>
+        </div>
+
+        <div class="content">
+            <p class="greeting">Mi querida Niña,</p>
+
+            <p class="message">
+                En esta epoca te quiero expresar todo el amor que te tengo, quiero que sepas que
+                te admiro y te quiero demaciado, de  verdad que eres una magnifica persona, que 
+                siempre haces que intente dar lo mejor de mi, la verdad estoy tan agredecido de 
+                tenerte a mi lado, de tenerte en mi vida, te amo con toda mi alma y no nquiero
+                que te vayas nunca de mi vida te amo...
+            </p>
+
+            <p class="message">
+                Este año ha estado lleno de momentos memorables gracias a ti, y mientras 
+                celebramos esta Navidad juntos, hay algo importante que me gustaría compartir 
+                contigo, cada momento que paso junto ati merece ser recordado mi corazon...
+            </p>
+
+            <div class="argument-box">
+                <h2>🎯 Mi Petición Navideña</h2>
+                <p style="margin-bottom: 15px;">
+                    He pensado mucho, y lo unico que quiero para esta navidad es que pasemos cadada vez
+                    mas momentos juntos y felices..
+                </p>
+                <ul class="argument-list">
+                    <li>Ccada risa</li>
+                    <li>Cada abrazo</li>
+                    <li>cada beso</li>
+                    <li>cada minuto</li>
+                    <li>Por lo tanto, el mejor regalo para mi eres tu, mi corazon..</li>
+                </ul>
+            </div>
+
+            <p class="message">
+                Sé que no importa lo que pase o los problemas que alla,
+                los pasaremos juntos, y juntos saldremos adelante..
+            </p>
+
+            <div class="hearts">❤️💚❤️</div>
+
+            <p class="signature">
+                Con todo mi amor,<br>
+                Tu niño que te ama con todo su corazon ✨
+            </p>
+
+            <div class="button-container">
+                <button class="btn" onclick="mostrarRespuesta()">
+                    ¿Aceptas mi carta? 🎁
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de respuesta -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2>🎉 ¡Gracias! 🎉</h2>
+            <p>
+                Gracias por todo lo que emos compartido. Recuerda que lo más importante 
+                de la Navidad no son los regalos, sino el amor que compartimos.
+            </p>
+            <p>
+                ¡Teamo con todo mi corazón! ❤️
+            </p>
+            <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        // Crear nieve cayendo
+        function crearNieve() {
+            const cantidadCopos = 50;
+            for (let i = 0; i < cantidadCopos; i++) {
+                const copo = document.createElement('div');
+                copo.className = 'snowflake';
+                copo.innerHTML = '❅';
+                copo.style.left = Math.random() * 100 + '%';
+                copo.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                copo.style.animationDelay = Math.random() * 5 + 's';
+                copo.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                document.body.appendChild(copo);
+            }
+        }
+
+        // Abrir el sobre
+        const envelope = document.getElementById('envelope');
+        const envelopeWrapper = document.getElementById('envelopeWrapper');
+        const letterContainer = document.getElementById('letterContainer');
+        let opened = false;
+
+        envelopeWrapper.addEventListener('click', function() {
+            if (!opened) {
+                opened = true;
+                envelope.classList.add('opening');
+                
+                // Después de la animación del sobre, mostrar la carta
+                setTimeout(function() {
+                    envelopeWrapper.style.opacity = '0';
+                    envelopeWrapper.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                    
+                    setTimeout(function() {
+                        envelopeWrapper.style.display = 'none';
+                        letterContainer.classList.add('show');
+                    }, 600);
+                }, 1500);
+            }
+        });
+
+        function mostrarRespuesta() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'flex';
+        }
+
+        function cerrarModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+
+        // Inicializar nieve al cargar la página
+        window.onload = function() {
+            crearNieve();
+        };
+
+        // Cerrar modal al hacer clic fuera de él
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) {
+                cerrarModal();
+            }
+        };
+    </script>
+</body>
+</html>
